@@ -1,26 +1,73 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import IncomeInput from "./components/RegularIncome/RegularIncome";
+import ExpensesInput from "./components/RegularExpenses/RegularExpenses";
+import Result from "./components/DisplayResults/DisplayResults";
+import "./App.css";
 
-function App() {
+const App: React.FC = () => {
+  const [incomes, setIncomes] = useState<number[]>([]);
+  const [expenses, setExpenses] = useState<number[]>([]);
+
+  const handleAddIncome = (value: number) => {
+    setIncomes([...incomes, value]);
+  };
+
+  const handleAddExpense = (value: number) => {
+    setExpenses([...expenses, value]);
+  };
+
+  const handleRemoveIncome = (index: number) => {
+    setIncomes(incomes.filter((_, i) => i !== index));
+  };
+
+  const handleRemoveExpense = (index: number) => {
+    setExpenses(expenses.filter((_, i) => i !== index));
+  };
+
+  const calculateLeftover = (): number => {
+    const totalIncome = incomes.reduce((acc, curr) => acc + curr, 0);
+    const totalExpenses = expenses.reduce((acc, curr) => acc + curr, 0);
+    return totalIncome - totalExpenses;
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Budget Tracker</h1>
+      <div className="input-section">
+        <IncomeInput onAddTransaction={handleAddIncome} />
+        <ExpensesInput onAddTransaction={handleAddExpense} />
+      </div>
+      <Result leftover={calculateLeftover()} />
+      <div className="list-section">
+        <div className="list-container">
+          <h2>Regular Income</h2>
+          <ul>
+            {incomes.map((income, index) => (
+              <li key={index}>
+                ${income}{" "}
+                <button onClick={() => handleRemoveIncome(index)}>
+                  Remove
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="list-container">
+          <h2>Regular Expenses</h2>
+          <ul>
+            {expenses.map((expense, index) => (
+              <li key={index}>
+                ${expense}{" "}
+                <button onClick={() => handleRemoveExpense(index)}>
+                  Remove
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </div>
   );
-}
+};
 
 export default App;
