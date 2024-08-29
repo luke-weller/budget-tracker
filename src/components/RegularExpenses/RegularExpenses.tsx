@@ -1,10 +1,10 @@
-import { useState, FC } from "react";
+import { useState, FC, ChangeEvent, KeyboardEvent } from "react";
 import { TransactionInputProps } from "../../interfaces";
 
 const ExpensesInput: FC<TransactionInputProps> = ({ onAddTransaction }) => {
   const [expense, setExpense] = useState<string>("");
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     if (/^\d*\.?\d{0,2}$/.test(value)) {
       setExpense(value);
@@ -15,11 +15,11 @@ const ExpensesInput: FC<TransactionInputProps> = ({ onAddTransaction }) => {
     const expenseValue = parseFloat(expense);
     if (!isNaN(expenseValue)) {
       onAddTransaction(expenseValue);
-      setExpense(""); // Reset input field
+      setExpense("");
     }
   };
 
-  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       handleAdd();
     }
@@ -32,7 +32,7 @@ const ExpensesInput: FC<TransactionInputProps> = ({ onAddTransaction }) => {
         type="text"
         value={expense}
         onChange={handleChange}
-        onKeyPress={handleKeyPress}
+        onKeyDown={handleKeyPress}
         placeholder="Enter expense"
       />
       <button onClick={handleAdd}>Add Expense</button>

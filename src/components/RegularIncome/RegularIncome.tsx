@@ -1,10 +1,10 @@
-import React, { useState, FC } from "react";
+import { useState, FC, ChangeEvent, KeyboardEvent } from "react";
 import { TransactionInputProps } from "../../interfaces";
 
 const IncomeInput: FC<TransactionInputProps> = ({ onAddTransaction }) => {
   const [income, setIncome] = useState<string>("");
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     if (/^\d*\.?\d{0,2}$/.test(value)) {
       setIncome(value);
@@ -15,11 +15,11 @@ const IncomeInput: FC<TransactionInputProps> = ({ onAddTransaction }) => {
     const incomeValue = parseFloat(income);
     if (!isNaN(incomeValue)) {
       onAddTransaction(incomeValue);
-      setIncome(""); // Reset input field
+      setIncome("");
     }
   };
 
-  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       handleAdd();
     }
@@ -32,7 +32,7 @@ const IncomeInput: FC<TransactionInputProps> = ({ onAddTransaction }) => {
         type="text"
         value={income}
         onChange={handleChange}
-        onKeyPress={handleKeyPress}
+        onKeyDown={handleKeyPress}
         placeholder="Enter income"
       />
       <button onClick={handleAdd}>Add Income</button>
